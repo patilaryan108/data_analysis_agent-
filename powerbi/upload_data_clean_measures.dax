@@ -1,0 +1,13 @@
+-- In Power BI: Modeling > New measure. Paste ONE measure at a time (the line(s) below).
+
+Total Height = SUM('BlinkIT Grocery Data'[Height])
+
+Average Height = AVERAGE('BlinkIT Grocery Data'[Height])
+
+Row Count = COUNTROWS('BlinkIT Grocery Data')
+
+Average Weight = AVERAGE('BlinkIT Grocery Data'[Weight])
+
+Average Legendary = AVERAGE('BlinkIT Grocery Data'[Legendary])
+
+Height Share % = DIVIDE([Total Height], CALCULATE([Total Height], ALLSELECTED('BlinkIT Grocery Data')))

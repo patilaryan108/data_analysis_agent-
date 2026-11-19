@@ -1,0 +1,21 @@
+-- In Power BI: Modeling > New measure. Paste ONE measure at a time (the line(s) below).
+
+Total Sales = SUM('BlinkIT Grocery Data'[Sales])
+
+Average Sales = AVERAGE('BlinkIT Grocery Data'[Sales])
+
+Row Count = COUNTROWS('BlinkIT Grocery Data')
+
+Item Count = DISTINCTCOUNT('BlinkIT Grocery Data'[Item Identifier])
+
+Outlet Count = DISTINCTCOUNT('BlinkIT Grocery Data'[Outlet Identifier])
+
+Average Sales per Outlet = DIVIDE([Total Sales], [Outlet Count])
+
+Average Rating = AVERAGE('BlinkIT Grocery Data'[Rating])
+
+Average Item Visibility = AVERAGE('BlinkIT Grocery Data'[Item Visibility])
+
+Average Item Weight = AVERAGE('BlinkIT Grocery Data'[Item Weight])
+
+Sales Share % = DIVIDE([Total Sales], CALCULATE([Total Sales], ALLSELECTED('BlinkIT Grocery Data')))

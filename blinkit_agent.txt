@@ -1,0 +1,111 @@
+“Good morning. My project is a general-purpose Data Analysis Agent. Instead of manually searching spreadsheets or writing SQL, a user can ask questions about the sales data in plain English, such as ‘Which outlet type has the highest sales?’
+
+The app checks the data, uses an AI model to decide how to answer, and runs a read-only database query to get the actual numbers. It can show the answer, create charts, help clean the data, and prepare a dashboard plan for Power BI.
+
+The example dataset has 8,523 rows about products, outlets, sales, and ratings. The goal is to make sales analysis easier for people who may not know SQL or coding. Thank you.”
+
+=============================================================================================================================================
+
+“Good morning. My project is a general-purpose Data Analysis Agent. It helps users explore their own data by asking questions in plain English, without needing to write SQL.
+
+Users can upload a CSV or Excel file, or choose a table from a MySQL database. The agent analyzes the selected data, answers questions with database results, creates charts, helps clean the data, and can prepare a dashboard plan for Power BI.
+
+Blinkit sales data is only one example used to demonstrate the project. The tool is designed to work with different datasets, as long as they contain useful columns for the questions being asked.”
+
+Updated answer if asked, “Is this only for Blinkit?”
+
+“No. Blinkit is just the sample dataset. Users can upload other CSV or Excel datasets, or analyze tables from a connected MySQL database. The available analysis depends on the columns and information in the selected data.”
+
+One detail to phrase carefully: the current app supports CSV/Excel uploads and MySQL tables; it does not automatically connect to every database system.
+
+How the architecture works
+
+User
+ │
+ ▼
+Streamlit web app (app.py)
+ ├── Select a MySQL table OR upload a CSV/Excel file
+ ├── View data overview and ask questions
+ └── Review proposed database changes
+ │
+ ▼
+AI agent (src/agent.py)
+ ├── Reads the table’s schema and context
+ ├── Sends the question to an LLM
+ └── Chooses a tool to answer it
+ │
+ ├── Data tools (src/tools.py)
+ │    ├── Profile and clean data
+ │    ├── Run read-only SQL queries
+ │    └── Create charts with Plotly
+ │
+ ├── Power BI tools (src/powerbi.py)
+ │    ├── Generate DAX measures and dashboard suggestions
+ │    └── Optionally create a Power BI-friendly database view
+ │
+ ▼
+MySQL database ── results back to the agent ──► Answer and charts in the app
+
+In simple terms: Streamlit is the screen, the AI agent interprets the question, Python tools do the analysis, and MySQL stores the data. Power BI support prepares data and dashboard instructions; it does not automatically build the Power BI report.
+
+Likely cross-questions and simple answers
+
+1. What problem does your project solve?
+It makes it easier to explore sales data without needing to write SQL or build every chart manually.
+
+2. Is this a Blinkit ordering or delivery app?
+No. It is an analytics tool for sales data—not an app for placing orders or tracking deliveries.
+
+3. Who would use it?
+A student, analyst, or business user who wants to ask questions about a dataset and see results quickly.
+
+4. What technologies did you use?
+Python, Streamlit, an LLM accessed through an OpenAI-compatible API, SQLAlchemy, MySQL, Pandas, Plotly, and Power BI-related DAX and Power Query output.
+
+5. How does it understand a question?
+The LLM receives the question and information about the table’s columns, then chooses a suitable analysis tool, such as running a SQL query.
+
+6. How do you know the answer’s numbers are correct?
+The agent is instructed to query the database for figures rather than guess them. The query result is then used to form the answer. AI responses still need checking.
+
+7. Can it answer questions about any dataset?
+It can accept CSV and Excel uploads and can connect to MySQL tables. But the quality of its answers depends on having relevant, understandable data.
+
+8. What happens when someone uploads a file?
+The app checks the file, standardizes column names, and saves its contents to a database table so the analysis tools can use it.
+
+9. What does data cleaning do?
+It can standardize labels, remove duplicate rows, and fill missing values. The cleaning tool saves the result as a new table, leaving the original table unchanged.
+
+10. Can the AI change or delete database data?
+Normal analysis queries are restricted to read-only SELECT queries. Actions that write data, such as cleaning or creating a Power BI view, require the user to enable permission in the app.
+
+11. Does the project use AI for calculations?
+The AI helps interpret the question and choose a tool. SQL performs the calculations against the database, which reduces reliance on mental arithmetic or guessed figures.
+
+12. What charts can it create?
+It supports bar, column, line, pie/donut, and scatter charts, depending on the data and question.
+
+13. How does the Power BI part work?
+It can suggest dashboard visuals and generate DAX measures. It can also create a database view with friendlier column names for Power BI to read. The user still builds or loads the report in Power BI.
+
+14. Does it use live Blinkit data?
+No. It analyzes the data that the user uploads or that is already in the connected database. The example dataset is not a live feed.
+
+15. Can it show sales trends over time?
+Only if the dataset contains suitable time data. The example includes outlet establishment year, but that is not the same as a date for each sale.
+
+16. What are some limitations?
+The AI may misunderstand a question, and answers depend on the data’s quality and columns. The project does not establish why sales changed, and it cannot analyze information that is not in the dataset.
+
+17. What would you improve next?
+I would add stronger validation for AI-generated queries, clearer handling of ambiguous questions, and support for more datasets and date-based analysis.
+
+18. What is a sample finding from the example data?
+The project’s tests check that Supermarket Type1 is the top outlet type by sales and Fruits and Vegetables is the top item type by sales. These are results for the included sample data, not a claim about all Blinkit sales.
+
+Power BI is an optional reporting layer in your project—not what makes the AI agent work. The app can already accept data, answer questions, run analyses, create charts, and help clean data without Power BI.
+
+What Power BI adds is a way to turn that analysis into a reusable, interactive business dashboard: with KPI measures, charts, and filters that someone can explore and refresh. In your project, the Power BI feature can prepare DAX measures, suggest a dashboard layout, and create a database view with clearer column names. It does not automatically build the Power BI report; the user still loads the data and arranges the visuals in Power BI.
+
+So, Power BI matters when you want to share ongoing insights as a dashboard. If you only need one-off questions and charts inside the app, you can work without it. It extends the project; it isn’t a dependency.
